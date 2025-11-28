@@ -1,0 +1,1 @@
+{"import": {"@": "src"}, "plugins": ["@vitejs/plugin-react"]}
