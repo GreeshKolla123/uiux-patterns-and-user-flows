@@ -1,0 +1,1 @@
+import React from 'react'; import Hero from '../components/Hero'; import Card from '../components/Card'; function Home() { return ( <div> <Hero /> <div className="container mx-auto p-4"> <h1 className="text-3xl">Welcome to our e-commerce app!</h1> <div className="flex flex-wrap"> <Card /> <Card /> <Card /> </div> </div> </div> ); } export default Home;
