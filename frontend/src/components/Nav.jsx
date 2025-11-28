@@ -1,0 +1,1 @@
+import React from 'react'; function Nav() { return ( <nav className="bg-gray-100 p-4"> <ul className="flex justify-between"> <li className="mr-6">Home</li> <li className="mr-6">About</li> <li className="mr-6">Blog</li> <li className="mr-6">Contact</li> </ul> </nav> ); } export default Nav;
