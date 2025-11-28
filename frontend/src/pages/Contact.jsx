@@ -1,0 +1,1 @@
+import React from 'react'; function Contact() { return ( <div> <h1 className="text-3xl">Contact Us</h1> <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.</p> </div> ); } export default Contact;
