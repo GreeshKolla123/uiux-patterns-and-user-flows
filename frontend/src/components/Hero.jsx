@@ -1,0 +1,1 @@
+import React from 'react'; function Hero() { return ( <section className="bg-blue-500 text-white p-4"> <h1 className="text-3xl">Welcome to our e-commerce app!</h1> </section> ); } export default Hero;
