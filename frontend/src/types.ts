@@ -1,0 +1,1 @@
+interface Product { id: number; name: string; description: string; price: number; stockQuantity: number; } interface CartItem { id: number; productId: number; quantity: number; } interface Order { id: number; userId: number; orderDate: Date; totalAmount: number; status: string; } interface User { id: number; username: string; email: string; passwordHash: string; role: string; }
