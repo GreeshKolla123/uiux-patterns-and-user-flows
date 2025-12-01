@@ -1,67 +1,60 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
-from app.database import get_session
-from app.models import Product, Order, User, OrderProduct
-router = APIRouter()
+from app.database import get_db
+from app.models import User, Product, Order, OrderItem
+from app.auth import authenticate_user, create_access_token
+from app.config import settings
 
-class ProductRequest(BaseModel):
-    name: str
-    description: str
-    price: float
-    category: str
+main_router = APIRouter()
 
-class OrderRequest(BaseModel):
-    products: list
-    shipping_address: str
-    payment_method: str
+@main_router.post('/auth/register')
+def register_user(user: User):
+    db = next(get_db())
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
-class UserRequest(BaseModel):
-    name: str
-    email: str
-    password: str
+@main_router.post('/auth/login')
+def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail='Invalid username or password')
+    access_token = create_access_token(data={'sub': user.username})
+    return {'access_token': access_token, 'token_type': 'bearer'}
 
-@router.get('/products')
-def get_products():
-    session = get_session()
-    products = session.query(Product).all()
+@main_router.get('/products')
+def read_products():
+    db = next(get_db())
+    products = db.query(Product).all()
     return products
 
-@router.post('/products')
-def create_product(product: ProductRequest):
-    session = get_session()
-    new_product = Product(name=product.name, description=product.description, price=product.price, category=product.category)
-    session.add(new_product)
-    session.commit()
-    return new_product
+@main_router.get('/products/{product_id}')
+def read_product(product_id: int):
+    db = next(get_db())
+    product = db.query(Product).filter(Product.product_id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail='Product not found')
+    return product
 
-@router.get('/orders')
-def get_orders():
-    session = get_session()
-    orders = session.query(Order).all()
-    return orders
+@main_router.post('/cart/add')
+def add_to_cart(product_id: int, quantity: int):
+    db = next(get_db())
+    product = db.query(Product).filter(Product.product_id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail='Product not found')
+    # add to cart logic
+    return {'message': 'Product added to cart'}
 
-@router.post('/orders')
-def create_order(order: OrderRequest):
-    session = get_session()
-    new_order = Order(user_id=1, status='pending', shipping_address=order.shipping_address, payment_method=order.payment_method)
-    session.add(new_order)
-    session.commit()
-    for product in order.products:
-        new_order_product = OrderProduct(order_id=new_order.id, product_id=product['id'], quantity=product['quantity'])
-        session.add(new_order_product)
-        session.commit()
-    return new_order
+@main_router.get('/cart')
+def read_cart():
+    db = next(get_db())
+    # get cart contents logic
+    return []
 
-@router.get('/users')
-def get_users():
-    session = get_session()
-    users = session.query(User).all()
-    return users
-
-@router.post('/users')
-def create_user(user: UserRequest):
-    session = get_session()
-    new_user = User(name=user.name, email=user.email, password=user.password)
-    session.add(new_user)
-    session.commit()
-    return new_user
+@main_router.post('/orders')
+def create_order(shipping_address: str):
+    db = next(get_db())
+    # create order logic
+    return {'order_id': 1, 'status': 'pending', 'total_amount': 100.0}
