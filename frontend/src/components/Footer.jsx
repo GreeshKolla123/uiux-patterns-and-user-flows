@@ -1,1 +1,1 @@
-import React from 'react'; function Footer() { return ( <footer className="bg-gray-100 p-4"> <p className="text-gray-700"> 2023 E-commerce App</p> </footer> ); } export default Footer;
+import React from 'react'; function Footer() { return (<footer className="bg-gray-200 text-gray-600 p-4 text-center">&copy; 2024 E-commerce Platform</footer>); } export default Footer;
