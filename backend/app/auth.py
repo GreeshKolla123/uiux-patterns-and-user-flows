@@ -1,25 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException
 from pydantic import BaseModel
-from app.database import get_session
 from app.models import User
+from app.config import settings
+from datetime import datetime, timedelta
 from jose import jwt
-from passlib.context import CryptContext
-router = APIRouter()
 
-class LoginRequest(BaseModel):
-    email: str
-    password: str
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
-class RegisterRequest(BaseModel):
-    name: str
-    email: str
-    password: str
+def authenticate_user(username: str, password: str):
+    # authenticate user logic
+    return User()
 
-class PasswordResetRequest(BaseModel):
-    email: str
-    new_password: str
-
-crypt = CryptContext(schemes=['bcrypt'], default='bcrypt')
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -27,17 +19,5 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({'exp': expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm='HS256')
     return encoded_jwt
-
-@router.post('/login')
-def login(request: LoginRequest):
-    session = get_session()
-    user = session.query(User).filter_by(email=request.email).first()
-    if not user:
-        raise HTTPException(status_code=401, detail='Invalid email or password')
-    if not crypt.verify(request.password, user.password):
-        raise HTTPException(status_code=401, detail='Invalid email or password')
-    access_token_expires = timedelta(minutes=30)
-    access_token = create_access_token(data={'sub': user.email}, expires_delta=access_token_expires)
-    return {'access_token': access_token, 'token_type': 'bearer'}
