@@ -1,45 +1,9 @@
-# Ecommerce Platform
-
-This is an ecommerce platform built with React and Vite.
+# E-commerce Platform
+This is a React-based e-commerce platform built with Vite and Tailwind CSS.
 
 ## Getting Started
-
-1. Clone the repository
-
-```bash
- git clone https://github.com/username/repository.git
-```
-
-2. Install dependencies
-
-```bash
- npm install
-```
-
-3. Start the development server
-
-```bash
- npm run dev
-```
-
-4. Open the application in your browser
-
-```bash
- open http://localhost:3000
-```
-
-## API Documentation
-
-The API documentation can be found [here](https://api.example.com/docs).
-
-## Contributing
-
-Contributions are welcome! Please submit a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License.
-
-## Authors
-
-* [Your Name](https://github.com/username)
+1. Clone the repository: `git clone https://github.com/username/e-commerce-platform.git`
+2. Install dependencies: `npm install` or `yarn install`
+3. Start the development server: `npm run dev` or `yarn dev`
+4. Build the application: `npm run build` or `yarn build`
+5. Preview the built application: `npm run preview` or `yarn preview`
