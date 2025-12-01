@@ -1,13 +1,16 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, scoped_session
-from sqlalchemy.orm.session import sessionmaker
+from sqlalchemy.orm import sessionmaker
 from app.models import Base
 
-engine = create_engine('sqlite:///app.db')
+engine = create_engine('postgresql://user:password@localhost/dbname')
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base.metadata.create_all(engine)
 
+
 def get_db():
-    db = scoped_session(sessionmaker(bind=engine))
+    db = SessionLocal()
     try:
         yield db
     finally:
